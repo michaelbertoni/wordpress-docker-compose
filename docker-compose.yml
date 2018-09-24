@@ -1,0 +1,31 @@
+version: '2'
+
+services:
+   wordpress_db:
+     image: mysql:5.7
+     container_name: wordpress_db
+     volumes:
+       - wordpress_db_data:/var/lib/mysql
+     restart: always
+     environment:
+       MYSQL_ROOT_PASSWORD: somewordpress
+       MYSQL_DATABASE: wordpress
+       MYSQL_USER: wordpress
+       MYSQL_PASSWORD: wordpress
+
+   wordpress_http:
+     depends_on:
+       - wordpress_db
+     image: wordpress:latest
+     container_name: wordpress_http
+     ports:
+       - "8000:80"
+     restart: always
+     environment:
+       WORDPRESS_DB_HOST: wordpress_db:3306
+       WORDPRESS_DB_USER: wordpress
+       WORDPRESS_DB_PASSWORD: wordpress
+volumes:
+    wordpress_db_data:
+      external:
+        name: wordpress_db_data
